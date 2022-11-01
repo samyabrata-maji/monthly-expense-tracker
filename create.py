@@ -3,7 +3,6 @@ import csv
 import openpyxl
 from datetime import date
 
-
 # uses date as file name
 # eg Nov_02_2022.xlsx for entries on Nov 2nd
 filename = date.today().strftime('%b_%d_%y')
@@ -14,15 +13,15 @@ filepath_csv = fr'{parent_dir}\{filename}.csv'
 
 def import_from_csv(worksheet, workbook):
     # if no csv files exist then creates one
-    if not os.path.exists(filepath_csv):
-        open(filepath_csv, 'x')
+    # if not os.path.exists(filepath_csv):
+    #   open(filepath_csv, 'x')
 
     # overwrites data from csv to excel
-    with open(filepath_csv, 'w') as csv_file:
+    with open(filepath_csv, 'a+') as csv_file:
         reader = csv.reader(csv_file, delimiter=':')
         for row in reader:
             worksheet.append(row)
-    workbook.save('file.xlsx')
+    workbook.save(filepath_excel)
 
 
 # if no file with the specific filename exists, then creates one
