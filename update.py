@@ -1,5 +1,5 @@
-import csv
 import os
+from csv import writer
 from datetime import date
 
 # uses date as file name
@@ -24,6 +24,8 @@ if input('Do you wish to create entries? (y/n) >>> ') == 'y':
             print('WRONG INPUT\nFormat: \"tag\",\"expense\"\n e.g, food,40\nType \'x\' to exit.\n >>> ')
             continue
 
-        with open(filepath_csv, 'a+') as csv_file:
-            reader = csv.reader(csv_file=csv_file)
-
+        with open(filepath_csv, 'a') as csv_file:
+            writer_obj = writer(csv_file)
+            writer_obj.writerow([tag, expense])
+            csv_file.close()
+            print(tag+f'{expense}')
