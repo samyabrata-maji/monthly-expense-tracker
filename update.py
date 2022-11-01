@@ -9,23 +9,29 @@ parent_dir = fr"{os.getcwd()}\data"
 filepath_excel = fr'{parent_dir}\{filename}.xlsx'
 filepath_csv = fr'{parent_dir}\{filename}.csv'
 
+rows = []
 isXPressed = False
 if input('Do you wish to create entries? (y/n) >>> ') == 'y':
     while not isXPressed:
-        entry = input('Format: \"tag\",\"expense\"\n e.g, food,40\nType \'x\' to exit.\n >>> ')
+        entry = input('FORMAT: \"tag\",\"expense\" e.g, food,40\nType \'x\' to exit.\n >>> ').strip('\n')
+
+        # when 'x' is pressed, loop terminates
         if entry == 'x':
             isXPressed = True
             break
 
+        # if input does not match the format,
+        # no exception is thrown
         try:
             tag = entry.split(',')[0]
             expense = int(entry.split(',')[1])
+            print(expense)
         except ValueError and IndexError:
-            print('WRONG INPUT\nFormat: \"tag\",\"expense\"\n e.g, food,40\nType \'x\' to exit.\n >>> ')
+            print('WRONG INPUT')
             continue
+        else:
+            rows.append([tag, expense])
 
-        with open(filepath_csv, 'a') as csv_file:
-            writer_obj = writer(csv_file)
-            writer_obj.writerow([tag, expense])
-            csv_file.close()
-            print(tag+f'{expense}')
+    with open(filepath_csv, 'a') as csv_file:
+        writer_obj = writer(csv_file, lineterminator='\n')
+        writer_obj.writerows(rows)
