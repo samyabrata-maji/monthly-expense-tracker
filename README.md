@@ -1,1 +1,1 @@
-# monthly-expense-tracker
+# Monthly Expense Tracker
