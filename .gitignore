@@ -1,6 +1,7 @@
 .idea
 data/*
 data_backup
+testing
 
 !.gitignore
 
