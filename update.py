@@ -12,13 +12,16 @@ filepath_csv = fr'{parent_dir}\{filename}.csv'
 
 # imports csv data in a @param rows
 # eg, csv -> food,40
-#            travel,50
+# ---------> travel,50
 # then, row[][] = [["food",40], ["travel",50]
+# and, rows_dict = {"food": 40, "travel": 50}
 if os.path.exists(filepath_csv):
     with open(filepath_csv, 'r') as csv_file:
-        rows = list(csv.reader(csv_file))
+        rows = list(csv.reader(csv_file))  # <-- not needed
+        rows_dict = dict(csv.DictReader(csv_file))
 else:
     rows = []
+    rows_dict = dict()
 
 isXPressed = False  # <-- TODO: see if there is a better way to do this
 if input('Do you wish to create entries? (y/n) >>> ') == 'y':
@@ -36,13 +39,13 @@ if input('Do you wish to create entries? (y/n) >>> ') == 'y':
         try:
             tag = entry.split(',')[0]
             expense = int(entry.split(',')[1])
-            print(expense)
         except ValueError and IndexError:
             print('WRONG INPUT')
             continue
         else:
             rows.append([tag, expense])
+            rows_dict[tag] = expense  # overwrites any previous data stored in this tag
 
     with open(filepath_csv, 'a') as csv_file:
-        writer_obj = writer(csv_file, lineterminator='\n')
-        writer_obj.writerows(rows)
+        writer_obj = csv.DictWriter(csv_file, lineterminator='\n')
+        writer_obj.writerows(rows_dict)
