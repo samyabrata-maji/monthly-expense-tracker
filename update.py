@@ -3,6 +3,8 @@ import os
 from csv import writer
 from datetime import date
 
+input_prompt = 'FORMAT: \"tag\",\"expense\" e.g, food,40\nType \'x\' to exit.\n >>> '
+
 # uses date as file name
 # e.g. Nov_02_2022.xlsx for entries on Nov 2nd
 filename = date.today().strftime('%b_%d_%y')
@@ -17,16 +19,16 @@ filepath_csv = fr'{parent_dir}\{filename}.csv'
 # and, rows_dict = {"food": 40, "travel": 50}
 if os.path.exists(filepath_csv):
     with open(filepath_csv, 'r') as csv_file:
-        rows = list(csv.reader(csv_file))  # <-- not needed
-        rows_dict = dict(csv.DictReader(csv_file))
+        rows = list(csv.reader(csv_file))
+        rows_fields = set(dict(csv.DictReader(csv_file)).keys())  # fieldnames
 else:
     rows = []
-    rows_dict = dict()
+    rows_fields = set()
 
 isXPressed = False  # <-- TODO: see if there is a better way to do this
 if input('Do you wish to create entries? (y/n) >>> ') == 'y':
     while not isXPressed:
-        entry = input('FORMAT: \"tag\",\"expense\" e.g, food,40\nType \'x\' to exit.\n >>> ').strip('\n')
+        entry = input(input_prompt).strip('\n')
 
         # when 'x' is pressed, loop terminates
         # TODO: see if there is a better way to do this
@@ -44,8 +46,8 @@ if input('Do you wish to create entries? (y/n) >>> ') == 'y':
             continue
         else:
             rows.append([tag, expense])
-            rows_dict[tag] = expense  # overwrites any previous data stored in this tag
+            rows_fields.add(tag)
 
     with open(filepath_csv, 'a') as csv_file:
-        writer_obj = csv.DictWriter(csv_file, lineterminator='\n')
-        writer_obj.writerows(rows_dict)
+        writer_obj = csv.writer(csv_file, lineterminator='\n')
+        writer_obj.writerows(rows)
