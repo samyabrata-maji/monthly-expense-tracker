@@ -16,4 +16,4 @@ pip install openpyxl
 Now run `update.py`
 ``` 
 python3 update.py
-```s
+```
